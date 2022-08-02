@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\Auth\JWTAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
 
@@ -17,6 +18,22 @@ use App\Http\Controllers\TodoController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Route::group([
+//     'prefix' => 'auth'
+// ], function () {
+//     Route::post('login', [JWTAuthController::class, 'login'])->name('jwt.login');
+//     Route::post('register', [JWTAuthController::class])->name('jwt.register');
+// });
+
+Route::prefix('auth')->group(function () {
+    Route::post('login', [JWTAuthController::class, 'login'])->name('jwt.login');
+    Route::post('register', [JWTAuthController::class, 'register'])->name('jwt.register');
+    Route::post('me', [JWTAuthController::class, 'me'])->name('jwt.me');
+    Route::post('logout', [JWTAuthController::class, 'logout'])->name('jwt.logout');
+    Route::post('refresh', [JWTAuthController::class, 'refresh'])->name('jwt.refresh');
+
 });
 
 Route::get('todos', [TodoController::class, 'index'])->name('todos.index');
